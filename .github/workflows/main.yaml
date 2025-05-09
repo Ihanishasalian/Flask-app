@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  CODE_DIR: /home/ubuntu/app/code/code
-  STACK_FILE: /home/ubuntu/docker-compose.yml
+  CODE_DIR: /home/ubuntu/flask-app/app/code/
+  STACK_FILE: /home/ubuntu/flask-app/docker-compose.yml
 
 jobs:
   build:
