@@ -1,0 +1,35 @@
+name: Rsync, Build, and Deploy in Stages
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CODE_DIR: /home/ubuntu/app/code/code
+  STACK_FILE: /home/ubuntu/docker-compose.yml
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Rsync code
+      run: |
+        rsync -avz --delete ./ "$CODE_DIR/"
+
+    - name: Docker Compose Build
+      run: |
+        docker compose -f "$STACK_FILE" build
+
+  deploy:
+    runs-on: self-hosted
+    needs: build   # <--- this line makes 'deploy' wait until 'build' succeeds
+
+    steps:
+    - name: Docker Compose Up
+      run: |
+        docker compose -f "$STACK_FILE" up -d
